@@ -26,6 +26,7 @@ import br.com.ifpe.oxefood.modelo.cliente.ClienteService;
 @RequestMapping("/api/cliente") // mapeamento por rotas
 @CrossOrigin
 
+
 public class ClienteController {
   @Autowired
   private ClienteService clienteService;
@@ -50,8 +51,23 @@ public class ClienteController {
     return new ResponseEntity<>(clienteSalvo, HttpStatus.CREATED);
   }
 
+  @PostMapping("/{id}/endereco")
+  public ResponseEntity<EnderecoCliente> adicionarEndereco(@PathVariable("id") Long idCliente,
+                                                           @RequestBody @Valid EnderecoCliente endereco) {
+    Cliente cliente = clienteService.obterPorID(idCliente);
 
-    @GetMapping
+    if (cliente == null) {
+      return ResponseEntity.notFound().build();
+    }
+
+    endereco.setCliente(cliente); // Associa o cliente ao endereço
+    EnderecoCliente salvo = enderecoClienteService.save(endereco);
+    return ResponseEntity.status(HttpStatus.CREATED).body(salvo);
+  }
+
+
+
+  @GetMapping
   public List<Cliente> listarTodos() {
     return clienteService.listarTodos();
   }
@@ -60,6 +76,13 @@ public class ClienteController {
   public Cliente obterPorID(@PathVariable Long id) {
     return clienteService.obterPorID(id);
   }
+
+  @GetMapping("/{id}/enderecos")
+  public ResponseEntity<List<EnderecoCliente>> listarEnderecosDoCliente(@PathVariable Long id) {
+    List<EnderecoCliente> enderecos = enderecoClienteService.buscarPorClienteId(id);
+    return ResponseEntity.ok(enderecos);
+  }
+
 
   @PutMapping("/{id}")
   public ResponseEntity<Void> update(@PathVariable("id") Long id, @RequestBody @Valid ClienteRequest request) {

@@ -37,6 +37,9 @@ public class EnderecoClienteService {
         return enderecoClienteRepository.save(enderecoCliente);
     }
 
+    public List<EnderecoCliente> buscarPorClienteId(Long clienteId) {
+        return enderecoClienteRepository.findByClienteId(clienteId);
+    }
 
     public List<EnderecoCliente> listarTodos() {
         return enderecoClienteRepository.findAll();
