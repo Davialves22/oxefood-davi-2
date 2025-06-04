@@ -3,6 +3,7 @@ package br.com.ifpe.oxefood.modelo.cliente;
 import java.time.LocalDate;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import org.hibernate.annotations.SQLRestriction;
@@ -29,6 +30,7 @@ public class Cliente extends EntidadeAuditavel {
   private String nome;
 
   @Column
+  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
   private LocalDate dataNascimento;
 
   @Column(unique = true)

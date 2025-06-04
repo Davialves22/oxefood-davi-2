@@ -30,8 +30,9 @@ public class ClienteRequest { // vai converter num objeto que tenha os atributos
   @Length(max = 100, message = "O Nome deverá ter no máximo {max} caracteres")
   private String nome;
 
-  @JsonFormat(pattern = "dd/MM/yyyy")
+  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
   private LocalDate dataNascimento;
+
 
   @NotBlank(message = "O CPF é de preenchimento obrigatório")
   @CPF
