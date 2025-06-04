@@ -1,0 +1,21 @@
+#cadastrar cliente
+{
+        "nome": "davi gerson",
+        "dataNascimento": "19/01/2002",
+        "cpf": "142.355.274-10",
+        "foneCelular": "(81) 9861.5987",
+        "foneFixo": "(81) 9861.598"
+    }
+
+#cadastrar endereços
+{
+  "endereco": "Avenida Governador Agamenon Magalhaes",
+  "numero": "1955",
+  "bairro": "Cavaleiro",
+  "cep": "54250-000",
+  "cidade": "Recife",
+  "uf": "PE",
+  "cliente": {
+    "id": 103
+  }
+}
