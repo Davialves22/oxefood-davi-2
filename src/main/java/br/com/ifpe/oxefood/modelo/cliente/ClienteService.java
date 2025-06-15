@@ -1,5 +1,6 @@
 package br.com.ifpe.oxefood.modelo.cliente;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,24 +35,27 @@ public class ClienteService {
   public void update(Long id, Cliente clienteAlterado) {
     Cliente cliente = repository.findById(id).orElseThrow(() -> new RuntimeException("Cliente não encontrado"));
 
-    cliente.setEnderecos(clienteAlterado.getEnderecos());
     cliente.setNome(clienteAlterado.getNome());
     cliente.setDataNascimento(clienteAlterado.getDataNascimento());
     cliente.setCpf(clienteAlterado.getCpf());
     cliente.setFoneCelular(clienteAlterado.getFoneCelular());
     cliente.setFoneFixo(clienteAlterado.getFoneFixo());
 
-    // Atualiza endereços garantindo a referência para o cliente
     if (clienteAlterado.getEnderecos() != null) {
       clienteAlterado.getEnderecos().forEach(endereco -> endereco.setCliente(cliente));
       cliente.setEnderecos(clienteAlterado.getEnderecos());
     } else {
-      cliente.getEnderecos().clear(); // limpa os endereços se for null
+      if (cliente.getEnderecos() == null) {
+        cliente.setEnderecos(new ArrayList<>());
+      } else {
+        cliente.getEnderecos().clear();
+      }
     }
 
     cliente.setVersao(cliente.getVersao() + 1);
     repository.save(cliente);
   }
+
 
   @Transactional
   public void delete(Long id) {

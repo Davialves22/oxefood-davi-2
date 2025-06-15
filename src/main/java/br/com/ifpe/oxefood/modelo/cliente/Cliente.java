@@ -1,6 +1,7 @@
 package br.com.ifpe.oxefood.modelo.cliente;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -44,7 +45,7 @@ public class Cliente extends EntidadeAuditavel {
 
   @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL, orphanRemoval = true)
   @JsonManagedReference
-  private List<EnderecoCliente> enderecos;
+  private List<EnderecoCliente> enderecos = new ArrayList<>();
 
 
 }
