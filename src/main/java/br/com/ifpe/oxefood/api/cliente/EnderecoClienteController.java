@@ -1,10 +1,8 @@
 package br.com.ifpe.oxefood.api.cliente;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -39,6 +37,13 @@ public class EnderecoClienteController {
         }
         return ResponseEntity.ok(endereco);
     }
+
+    @GetMapping("/por-cliente/{idCliente}")
+    public ResponseEntity<List<EnderecoCliente>> listarPorCliente(@PathVariable Long idCliente) {
+        List<EnderecoCliente> enderecos = enderecoClienteService.buscarPorCliente(idCliente);
+        return ResponseEntity.ok(enderecos);
+    }
+
 
     @PutMapping("/{id}")
     public ResponseEntity<Void> update(@PathVariable Long id, @RequestBody @Valid EnderecoClienteRequest request) {

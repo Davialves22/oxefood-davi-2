@@ -41,6 +41,11 @@ public class EnderecoClienteService {
         return enderecoClienteRepository.findByClienteId(clienteId);
     }
 
+    public List<EnderecoCliente> buscarPorCliente(Long idCliente) {
+        return enderecoClienteRepository.findByClienteId(idCliente);
+    }
+
+
     public List<EnderecoCliente> listarTodos() {
         return enderecoClienteRepository.findAll();
     }
