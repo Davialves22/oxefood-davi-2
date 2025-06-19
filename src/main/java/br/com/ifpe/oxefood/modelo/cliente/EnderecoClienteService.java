@@ -1,7 +1,6 @@
 package br.com.ifpe.oxefood.modelo.cliente;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,11 +23,10 @@ public class EnderecoClienteService {
             throw new RuntimeException("Cliente deve ser informado.");
         }
 
-        // Busca o cliente do banco
+        // Busca o cliente do banco para garantir entidade gerenciada
         Cliente cliente = clienteRepository.findById(enderecoCliente.getCliente().getId())
                 .orElseThrow(() -> new RuntimeException("Cliente não encontrado"));
 
-        // Seta o cliente completo
         enderecoCliente.setCliente(cliente);
 
         enderecoCliente.setHabilitado(Boolean.TRUE);
@@ -44,7 +42,6 @@ public class EnderecoClienteService {
     public List<EnderecoCliente> buscarPorCliente(Long idCliente) {
         return enderecoClienteRepository.findByClienteId(idCliente);
     }
-
 
     public List<EnderecoCliente> listarTodos() {
         return enderecoClienteRepository.findAll();
@@ -67,9 +64,11 @@ public class EnderecoClienteService {
         endereco.setUf(enderecoAlterado.getUf());
         endereco.setCep(enderecoAlterado.getCep());
 
-        // Se quiser garantir consistência no cliente, pode adicionar:
-        if (enderecoAlterado.getCliente() != null) {
-            endereco.setCliente(enderecoAlterado.getCliente());
+        // Corrige aqui para buscar o cliente gerenciado antes de setar
+        if (enderecoAlterado.getCliente() != null && enderecoAlterado.getCliente().getId() != null) {
+            Cliente cliente = clienteRepository.findById(enderecoAlterado.getCliente().getId())
+                    .orElseThrow(() -> new RuntimeException("Cliente não encontrado com id: " + enderecoAlterado.getCliente().getId()));
+            endereco.setCliente(cliente);
         }
 
         enderecoClienteRepository.save(endereco);
