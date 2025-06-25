@@ -67,7 +67,8 @@ public class EnderecoClienteService {
         // Corrige aqui para buscar o cliente gerenciado antes de setar
         if (enderecoAlterado.getCliente() != null && enderecoAlterado.getCliente().getId() != null) {
             Cliente cliente = clienteRepository.findById(enderecoAlterado.getCliente().getId())
-                    .orElseThrow(() -> new RuntimeException("Cliente não encontrado com id: " + enderecoAlterado.getCliente().getId()));
+                    .orElseThrow(() -> new RuntimeException(
+                            "Cliente não encontrado com id: " + enderecoAlterado.getCliente().getId()));
             endereco.setCliente(cliente);
         }
 

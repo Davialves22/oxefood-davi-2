@@ -1,12 +1,16 @@
 package br.com.ifpe.oxefood.api.cliente;
 
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.List;
 
+import br.com.ifpe.oxefood.modelo.acesso.Perfil;
+import br.com.ifpe.oxefood.modelo.acesso.Usuario;
 import br.com.ifpe.oxefood.modelo.cliente.EnderecoCliente;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import br.com.ifpe.oxefood.modelo.cliente.Cliente;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
@@ -43,8 +47,25 @@ public class ClienteRequest { // vai converter num objeto que tenha os atributos
 
   private String foneFixo;
 
+  @NotBlank(message = "O e-mail é de preenchimento obrigatório")
+  @Email
+  private String email;
+
+  @NotBlank(message = "A senha é de preenchimento obrigatório")
+  private String password;
+
+  public Usuario buildUsuario() {
+    return Usuario.builder()
+            .username(email)
+            .password(password)
+            .roles(Arrays.asList(new Perfil(Perfil.ROLE_CLIENTE)))
+            .build();
+  }
+
+
   public Cliente toEntity(List<EnderecoCliente> enderecos) {
     Cliente cliente = Cliente.builder()
+            .usuario(buildUsuario())
             .nome(nome)
             .dataNascimento(dataNascimento)
             .cpf(cpf)
