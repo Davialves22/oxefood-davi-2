@@ -16,6 +16,7 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import br.com.ifpe.oxefood.modelo.acesso.Perfil;
 import br.com.ifpe.oxefood.modelo.acesso.Usuario;
 import br.com.ifpe.oxefood.modelo.seguranca.JwtAuthenticationFilter;
 
@@ -26,7 +27,8 @@ public class SecurityConfiguration {
     private final AuthenticationProvider authenticationProvider;
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
-    public SecurityConfiguration(JwtAuthenticationFilter jwtAuthenticationFilter, AuthenticationProvider authenticationProvider) {
+    public SecurityConfiguration(JwtAuthenticationFilter jwtAuthenticationFilter,
+            AuthenticationProvider authenticationProvider) {
         this.authenticationProvider = authenticationProvider;
         this.jwtAuthenticationFilter = jwtAuthenticationFilter;
     }
@@ -35,24 +37,40 @@ public class SecurityConfiguration {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
         http
-            .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-            .csrf(c -> c.disable())
-            .authorizeHttpRequests(authorize -> authorize
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+                .csrf(c -> c.disable())
+                .authorizeHttpRequests(authorize -> authorize
 
-                .requestMatchers(HttpMethod.POST, "/api/cliente").permitAll()
-                .requestMatchers(HttpMethod.POST, "/api/login").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/cliente").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/funcionario").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/login").permitAll()
 
-                .requestMatchers(HttpMethod.GET, "/api-docs/*").permitAll()
-                .requestMatchers(HttpMethod.GET, "/swagger-ui/*").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/produto/").hasAnyAuthority(
+                                Perfil.ROLE_CLIENTE,
+                                Perfil.ROLE_FUNCIONARIO_ADMIN,
+                                Perfil.ROLE_FUNCIONARIO_USER) // Consulta de produto
 
-                .anyRequest().authenticated()
+                        .requestMatchers(HttpMethod.POST, "/api/produto").hasAnyAuthority(
+                                Perfil.ROLE_FUNCIONARIO_ADMIN,
+                                Perfil.ROLE_FUNCIONARIO_USER) // Cadastro de produto
 
-            )
-            .sessionManagement((session) -> session
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-            )            
-            .authenticationProvider(authenticationProvider)
-            .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+                        .requestMatchers(HttpMethod.PUT, "/api/produto/*").hasAnyAuthority(
+                                Perfil.ROLE_FUNCIONARIO_ADMIN,
+                                Perfil.ROLE_FUNCIONARIO_USER) // Alteração de produto
+
+                        .requestMatchers(HttpMethod.DELETE, "/api/produto/*").hasAnyAuthority(
+                                Perfil.ROLE_FUNCIONARIO_ADMIN) // Exclusão de produto
+
+                        .requestMatchers(HttpMethod.GET, "/api-docs/*").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/swagger-ui/*").permitAll()
+
+                        .anyRequest().authenticated()
+
+                )
+                .sessionManagement((session) -> session
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .authenticationProvider(authenticationProvider)
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
@@ -65,10 +83,9 @@ public class SecurityConfiguration {
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE"));
         configuration.setAllowedHeaders(List.of("Authorization", "Content-Type"));
         configuration.setAllowCredentials(true);
-    
+
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);    
+        source.registerCorsConfiguration("/**", configuration);
         return source;
     }
 }
-
