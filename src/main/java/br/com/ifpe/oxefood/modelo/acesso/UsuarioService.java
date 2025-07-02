@@ -22,7 +22,7 @@ public class UsuarioService implements UserDetailsService {
     private final AuthenticationManager authenticationManager;
 
     public UsuarioService(UsuarioRepository userRepository, AuthenticationManager authenticationManager,
-                          PasswordEncoder passwordEncoder) {
+            PasswordEncoder passwordEncoder) {
 
         this.authenticationManager = authenticationManager;
         this.repository = userRepository;

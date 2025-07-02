@@ -69,7 +69,6 @@ public class FuncionarioService {
         repository.save(funcionario);
     }
 
-    @Transactional
     public void delete(Long id) {
 
         Funcionario funcionario = repository.findById(id).get();

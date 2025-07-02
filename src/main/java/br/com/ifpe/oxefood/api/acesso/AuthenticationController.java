@@ -19,7 +19,7 @@ import br.com.ifpe.oxefood.modelo.seguranca.JwtService;
 public class AuthenticationController {
 
     private final JwtService jwtService;
-    
+
     private UsuarioService usuarioService;
 
     public AuthenticationController(JwtService jwtService, UsuarioService usuarioService) {
@@ -30,7 +30,7 @@ public class AuthenticationController {
 
     @PostMapping
     public Map<Object, Object> signin(@RequestBody AuthenticationRequest data) {
-    
+
         Usuario authenticatedUser = usuarioService.authenticate(data.getUsername(), data.getPassword());
 
         String jwtToken = jwtService.generateToken(authenticatedUser);
@@ -41,5 +41,5 @@ public class AuthenticationController {
         loginResponse.put("tokenExpiresIn", jwtService.getExpirationTime());
 
         return loginResponse;
-    }    
+    }
 }

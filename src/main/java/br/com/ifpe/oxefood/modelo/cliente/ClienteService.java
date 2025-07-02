@@ -3,12 +3,12 @@ package br.com.ifpe.oxefood.modelo.cliente;
 import java.util.ArrayList;
 import java.util.List;
 
-import br.com.ifpe.oxefood.modelo.acesso.Perfil;
-import br.com.ifpe.oxefood.modelo.acesso.PerfilRepository;
-import br.com.ifpe.oxefood.modelo.acesso.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import br.com.ifpe.oxefood.modelo.acesso.Perfil;
+import br.com.ifpe.oxefood.modelo.acesso.PerfilRepository;
+import br.com.ifpe.oxefood.modelo.acesso.UsuarioService;
 import jakarta.transaction.Transactional;
 
 @Service
@@ -22,7 +22,6 @@ public class ClienteService {
 
     @Autowired
     private PerfilRepository perfilUsuarioRepository;
-
 
     @Transactional // escopo de transação no banco de dados
     public Cliente save(Cliente cliente) {
@@ -72,7 +71,6 @@ public class ClienteService {
         cliente.setVersao(cliente.getVersao() + 1);
         repository.save(cliente);
     }
-
 
     @Transactional
     public void delete(Long id) {
